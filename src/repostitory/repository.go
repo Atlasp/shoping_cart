@@ -99,7 +99,7 @@ func (r Repository) GetCart(id interface{}) (model.Cart, error) {
 	var cartEntry model.CartTable
 	result := r.DB.First(&cartEntry, id)
 	if result.Error != nil {
-		return model.NewCart(), nil
+		return model.NewCart(), result.Error
 	}
 	cart := cartEntry.ParseCartTable()
 

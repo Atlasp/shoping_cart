@@ -18,7 +18,8 @@ func AddItem(r repostitory.Repository) gin.HandlerFunc {
 		err = r.AddItem(item)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
+		} else {
+			c.JSON(http.StatusCreated, item)
 		}
-		c.Status(http.StatusCreated)
 	}
 }

@@ -14,8 +14,9 @@ func PlaceOrder(r repostitory.Repository, d model.Discount) gin.HandlerFunc {
 		customerId := c.Param("customer_id")
 		err := r.PlaceOrder(customerId, d)
 		if err != nil {
-			c.Status(http.StatusInternalServerError)
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		} else {
+			c.JSON(http.StatusOK, fmt.Sprintf("Order has been placed"))
 		}
-		c.JSON(http.StatusOK, fmt.Sprintf("Order has been placed"))
 	}
 }

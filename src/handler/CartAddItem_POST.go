@@ -14,8 +14,9 @@ func AddItemToCart(r repostitory.Repository) gin.HandlerFunc {
 		itemId := c.Param("item_id")
 		err := r.AddItemToCart(customerId, itemId)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusNotFound, fmt.Sprintf("%s", err))
+		} else {
+			c.JSON(http.StatusOK, fmt.Sprintf("%s added to cart", itemId))
 		}
-		c.JSON(http.StatusOK, fmt.Sprintf("%s added to cart", itemId))
 	}
 }

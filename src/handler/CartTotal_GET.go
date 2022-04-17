@@ -14,8 +14,9 @@ func ReturnBasketTotal(r repostitory.Repository, d model.Discount) gin.HandlerFu
 		cartId := c.Param("customer_id")
 		cart, err := r.GetCart(cartId)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, fmt.Sprintf("Cannot retrieve cart total"))
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		} else {
+			c.JSON(http.StatusOK, cart.GetCartTotal(d))
 		}
-		c.JSON(http.StatusOK, cart.GetCartTotal(d))
 	}
 }

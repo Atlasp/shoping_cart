@@ -13,8 +13,9 @@ func ReturnCart(r repostitory.Repository) gin.HandlerFunc {
 		cartId := c.Param("customer_id")
 		cart, err := r.GetCart(cartId)
 		if err != nil {
-			c.JSON(http.StatusNotFound, fmt.Sprintf("Cart %s not found", cartId))
+			c.JSON(http.StatusNotFound, fmt.Sprintf("cart %s not found", cartId))
+		} else {
+			c.JSON(http.StatusOK, cart.CartItems)
 		}
-		c.JSON(http.StatusOK, cart.CartItems)
 	}
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,8 +13,9 @@ func DeleteItem(r repostitory.Repository) gin.HandlerFunc {
 		id := c.Param("item_id")
 		err := r.DeleteItem(id)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusInternalServerError, fmt.Sprintf("%s", err))
+		} else {
+			c.JSON(http.StatusOK, fmt.Sprintf("item %s deleted", id))
 		}
-		c.Status(http.StatusOK)
 	}
 }
