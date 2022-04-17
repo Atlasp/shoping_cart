@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,10 @@ import (
 func PlaceOrder(r repostitory.Repository, d model.Discount) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		customerId := c.Param("customer_id")
-		r.PlaceOrder(customerId, d)
-		c.Status(http.StatusOK)
+		err := r.PlaceOrder(customerId, d)
+		if err != nil {
+			c.Status(http.StatusInternalServerError)
+		}
+		c.JSON(http.StatusOK, fmt.Sprintf("Order has been placed"))
 	}
 }

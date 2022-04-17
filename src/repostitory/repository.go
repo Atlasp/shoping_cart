@@ -1,6 +1,7 @@
 package repostitory
 
 import (
+	"fmt"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -42,7 +43,7 @@ func (r Repository) GetItem(id interface{}) (model.Item, error) {
 	return item, nil
 }
 
-func (r Repository) DeleteItem(id string) error {
+func (r Repository) DeleteItem(id interface{}) error {
 	result := r.DB.Delete(&model.Item{}, id)
 	if result.Error != nil {
 		return result.Error
@@ -50,6 +51,7 @@ func (r Repository) DeleteItem(id string) error {
 	return nil
 }
 
+// Add item validation
 func (r Repository) AddItem(item model.Item) error {
 	result := r.DB.Create(&item)
 	if result.Error != nil {
@@ -62,30 +64,35 @@ func (r Repository) PlaceOrder(id interface{}, d model.Discount) error {
 	c, _ := r.GetCart(id)
 	cartTotal := c.GetCartTotal(d)
 	orderedItems := make([]int64, len(c.CartItems))
-	for k, _ := range c.CartItems {
+	for k := range c.CartItems {
 		orderedItems = append(orderedItems, k)
 	}
 	dt := time.Now()
 
-	order := model.Order{
-		CustomerId:    c.CustomerId,
-		OrderedItems:  orderedItems,
-		OrderTotal:    cartTotal.TotalPrice,
-		OrderDiscount: cartTotal.Discount,
-		OrderFinal:    cartTotal.FinalPrice,
-		OrderDate:     dt,
+	if cartTotal.FinalPrice < d.MaxBasketSize {
+
+		order := model.Order{
+			CustomerId:    c.CustomerId,
+			OrderedItems:  orderedItems,
+			OrderTotal:    cartTotal.TotalPrice,
+			OrderDiscount: cartTotal.Discount,
+			OrderFinal:    cartTotal.FinalPrice,
+			OrderDate:     dt,
+		}
+
+		cart := model.CartTable{
+			CartID:     c.CartID,
+			CustomerId: c.CustomerId,
+			Items:      nil,
+		}
+
+		r.DB.Create(&order)
+		r.DB.Save(&cart)
+
+		return nil
 	}
 
-	cart := model.CartTable{
-		CartID:     c.CartID,
-		CustomerId: c.CustomerId,
-		Items:      nil,
-	}
-
-	r.DB.Create(&order)
-	r.DB.Save(&cart)
-
-	return nil
+	return fmt.Errorf("cart exceeds maximum limit of %d", d.MaxBasketSize)
 }
 
 func (r Repository) GetCart(id interface{}) (model.Cart, error) {
@@ -104,13 +111,23 @@ func (r Repository) GetCart(id interface{}) (model.Cart, error) {
 	return cart, nil
 }
 
-// add item out of stock option
-func (r Repository) AddItemToCart(cartId interface{}, itemId interface{}) {
+func (r Repository) AddItemToCart(cartId interface{}, itemId interface{}) error {
 	var cartTable model.CartTable
-	r.DB.First(&cartTable, cartId)
-	item, _ := r.GetItem(itemId)
-	cartTable.Items = append(cartTable.Items, item.Id)
-	item.Stock -= 1
-	r.DB.Save(&item)
-	r.DB.Save(&cartTable)
+	result := r.DB.First(&cartTable, cartId)
+	if result.Error != nil {
+		return result.Error
+	}
+	item, err := r.GetItem(itemId)
+	if err != nil {
+		return err
+	}
+	if item.Stock > 0 {
+		cartTable.Items = append(cartTable.Items, item.Id)
+		item.Stock -= 1
+		r.DB.Save(&item)
+		r.DB.Save(&cartTable)
+		return nil
+	}
+
+	return fmt.Errorf("%s out of stock", item.Name)
 }

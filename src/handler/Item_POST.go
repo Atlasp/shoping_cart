@@ -11,8 +11,11 @@ import (
 func AddItem(r repostitory.Repository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		item := model.Item{}
-		c.Bind(&item)
-		err := r.AddItem(item)
+		err := c.Bind(&item)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		}
+		err = r.AddItem(item)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err)
 		}

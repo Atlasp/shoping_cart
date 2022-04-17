@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,10 @@ func AddItemToCart(r repostitory.Repository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		customerId := c.Param("customer_id")
 		itemId := c.Param("item_id")
-		r.AddItemToCart(customerId, itemId)
-		c.Status(http.StatusOK)
+		err := r.AddItemToCart(customerId, itemId)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err)
+		}
+		c.JSON(http.StatusOK, fmt.Sprintf("%s added to cart", itemId))
 	}
 }

@@ -1,6 +1,6 @@
 package model
 
-import pq "github.com/lib/pq"
+import "github.com/lib/pq"
 
 type Cart struct {
 	CartID     int64              `json:"cart_id"`
