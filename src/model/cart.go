@@ -10,7 +10,7 @@ type Cart struct {
 
 type CartTable struct {
 	CartID     int64         `json:"cart_id" gorm:"primaryKey"`
-	CustomerId int64         `json:"customer_id"`
+	CustomerId int64         `json:"customer_id" gorm:"unique"`
 	Items      pq.Int64Array `json:"items" gorm:"type:integer[]"`
 }
 
@@ -25,11 +25,12 @@ type CartTotal struct {
 	FinalPrice int64 `json:"final_price"`
 }
 
-func NewCart() Cart {
+// TODO: change this so it makes a new ID or remove it
+func NewCart(customerId int) Cart {
 	cartItems := make(map[int64]CartItem)
 	return Cart{
-		CartID:     1,
-		CustomerId: 1,
+		CartID:     0,
+		CustomerId: int64(customerId),
 		CartItems:  cartItems,
 	}
 }
@@ -57,17 +58,23 @@ func (c *Cart) AddItemToCart(i Item) {
 	}
 }
 
-func (c Cart) GetCartTotal(d Discount) CartTotal {
+func (c Cart) GetCartTotal(cr CartRules) CartTotal {
 	var total int64
 	var discount int64
 
-	for _, v := range c.CartItems {
-		total += v.Quantity * v.UnitPrice
-		discount += (v.Quantity / d.FreeItemThreshold) * v.UnitPrice
-	}
+	if cr != (CartRules{}) {
+		for _, v := range c.CartItems {
+			total += v.Quantity * v.UnitPrice
+			discount += (v.Quantity / cr.FreeItemThreshold) * v.UnitPrice
+		}
 
-	if total > d.DiscountThreshold {
-		discount += 1.00
+		if total > cr.DiscountThreshold {
+			discount += 1.00
+		}
+	} else {
+		for _, v := range c.CartItems {
+			total += v.Quantity * v.UnitPrice
+		}
 	}
 
 	return CartTotal{

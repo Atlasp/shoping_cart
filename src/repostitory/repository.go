@@ -2,6 +2,7 @@ package repostitory
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -10,11 +11,12 @@ import (
 )
 
 type Repository struct {
-	DB *gorm.DB
+	DB        *gorm.DB
+	CartRules model.CartRules
 }
 
-func NewRepository() Repository {
-	dbURL := "postgres://revel:postgres@localhost:5432/revel"
+func NewRepository(connectionString string, cr string) Repository {
+	dbURL := connectionString
 
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 
@@ -31,7 +33,9 @@ func NewRepository() Repository {
 		panic("cannot migrate")
 	}
 
-	return Repository{DB: db}
+	cartRules := model.ReadCartRules(cr)
+
+	return Repository{DB: db, CartRules: cartRules}
 }
 
 func (r Repository) GetItem(id interface{}) (model.Item, error) {
@@ -51,7 +55,6 @@ func (r Repository) DeleteItem(id interface{}) error {
 	return nil
 }
 
-// Add item validation
 func (r Repository) AddItem(item model.Item) error {
 	result := r.DB.Create(&item)
 	if result.Error != nil {
@@ -60,16 +63,16 @@ func (r Repository) AddItem(item model.Item) error {
 	return nil
 }
 
-func (r Repository) PlaceOrder(id interface{}, d model.Discount) error {
-	c, _ := r.GetCart(id)
-	cartTotal := c.GetCartTotal(d)
+func (r Repository) PlaceOrder(customerId string, cr model.CartRules) error {
+	c, _ := r.GetCart(customerId)
+	cartTotal := c.GetCartTotal(cr)
 	orderedItems := make([]int64, len(c.CartItems))
 	for k := range c.CartItems {
 		orderedItems = append(orderedItems, k)
 	}
 	dt := time.Now()
 
-	if cartTotal.FinalPrice < d.MaxBasketSize {
+	if cartTotal.FinalPrice < cr.MaxBasketSize {
 
 		order := model.Order{
 			CustomerId:    c.CustomerId,
@@ -92,14 +95,15 @@ func (r Repository) PlaceOrder(id interface{}, d model.Discount) error {
 		return nil
 	}
 
-	return fmt.Errorf("cart exceeds maximum limit of %d", d.MaxBasketSize)
+	return fmt.Errorf("cart exceeds maximum limit of %d", cr.MaxBasketSize)
 }
 
-func (r Repository) GetCart(id interface{}) (model.Cart, error) {
+func (r Repository) GetCart(customerId string) (model.Cart, error) {
 	var cartEntry model.CartTable
-	result := r.DB.First(&cartEntry, id)
+	result := r.DB.First(&cartEntry, "customer_id = ?", customerId)
+	cid, _ := strconv.Atoi(customerId)
 	if result.Error != nil {
-		return model.NewCart(), result.Error
+		return model.NewCart(cid), result.Error
 	}
 	cart := cartEntry.ParseCartTable()
 
@@ -111,9 +115,9 @@ func (r Repository) GetCart(id interface{}) (model.Cart, error) {
 	return cart, nil
 }
 
-func (r Repository) AddItemToCart(cartId interface{}, itemId interface{}) error {
+func (r Repository) AddItemToCart(customerId interface{}, itemId interface{}) error {
 	var cartTable model.CartTable
-	result := r.DB.First(&cartTable, cartId)
+	result := r.DB.First(&cartTable, "customer_id = ?", customerId)
 	if result.Error != nil {
 		return result.Error
 	}

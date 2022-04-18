@@ -5,30 +5,39 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"revel_systems_shopping/src/handler"
-	"revel_systems_shopping/src/model"
 	"revel_systems_shopping/src/repostitory"
 )
 
-func main() {
-	discount := model.Discount{
-		MaxBasketSize:     100,
-		DiscountThreshold: 20,
-		FreeItemThreshold: 5,
-	}
+// TODO: Add decimals to price calculations
+// TODO: Write unit and integration tests
+// TODO: Package API in docker container
+// TODO: Create new cart if there is no item ?
 
-	repo := repostitory.NewRepository()
+func main() {
+
+	cartRules := "cart_rules.json"
+	dbConnection := "postgres://revel:postgres@localhost:5432/revel"
+	repo := repostitory.NewRepository(dbConnection, cartRules)
 
 	router := gin.Default()
 
-	//Item endpoints
-	router.GET("/item/:item_id", handler.ReturnItem(repo))
-	router.POST("/item", handler.AddItem(repo))
-	router.DELETE("/item/:item_id", handler.DeleteItem(repo))
-	// Cart endpoints
-	router.GET("/cart/:customer_id", handler.ReturnCart(repo))
-	router.GET("/cart/:customer_id/totals", handler.ReturnBasketTotal(repo, discount))
-	router.POST("/cart/:customer_id/items/:item_id", handler.AddItemToCart(repo))
-	router.POST("/cart/:customer_id/orders", handler.PlaceOrder(repo, discount))
+	v1 := router.Group("/api/v1")
+
+	{
+		items := v1.Group("/items")
+		{
+			items.GET(":item_id", handler.ReturnItem(repo))
+			items.POST("", handler.AddItem(repo))
+			items.DELETE(":item_id", handler.DeleteItem(repo))
+		}
+		carts := v1.Group("/carts")
+		{
+			carts.GET(":customer_id", handler.ReturnCart(repo))
+			carts.GET(":customer_id/totals", handler.ReturnBasketTotal(repo))
+			carts.POST(":customer_id/items/:item_id", handler.AddItemToCart(repo))
+			carts.POST(":customer_id/orders", handler.PlaceOrder(repo))
+		}
+	}
 
 	// Run server
 	log.Fatal(router.Run(":4141"))

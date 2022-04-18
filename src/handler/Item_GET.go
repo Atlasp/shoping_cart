@@ -13,7 +13,7 @@ func ReturnItem(r repostitory.Repository) gin.HandlerFunc {
 		id := c.Param("item_id")
 		item, err := r.GetItem(id)
 		if err != nil {
-			c.JSON(http.StatusNotFound, fmt.Sprintf("%s", err))
+			c.JSON(http.StatusNotFound, fmt.Sprintf("%d: %s", http.StatusNotFound, err.Error()))
 		} else {
 			c.JSON(http.StatusOK, item)
 		}
