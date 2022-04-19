@@ -1,0 +1,58 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Shopping API for Revel.",
+        "title": "Revel Shopping API",
+        "contact": {
+            "name": "Simas Paulikas",
+            "email": "simaspaulikas@yahoo.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:4141",
+    "basePath": "/api/v1",
+    "paths": {
+        "/items/{item_id}": {
+            "get": {
+                "description": "get item by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "items"
+                ],
+                "summary": "Show an item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Item"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Item": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

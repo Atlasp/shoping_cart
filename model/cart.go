@@ -1,17 +1,9 @@
 package model
 
-import "github.com/lib/pq"
-
 type Cart struct {
-	CartID     int64              `json:"cart_id"`
+	CartID     int64              `json:"cart_id" gorm`
 	CustomerId int64              `json:"customer_id"`
 	CartItems  map[int64]CartItem `json:"basket_items"`
-}
-
-type CartTable struct {
-	CartID     int64         `json:"cart_id" gorm:"primaryKey"`
-	CustomerId int64         `json:"customer_id" gorm:"unique"`
-	Items      pq.Int64Array `json:"items" gorm:"type:integer[]"`
 }
 
 type CartItem struct {
@@ -19,33 +11,7 @@ type CartItem struct {
 	Quantity  int64 `json:"quantity"`
 }
 
-type CartTotal struct {
-	TotalPrice int64 `json:"total_price"`
-	Discount   int64 `json:"discount"`
-	FinalPrice int64 `json:"final_price"`
-}
-
-// TODO: change this so it makes a new ID or remove it
-func NewCart(customerId int) Cart {
-	cartItems := make(map[int64]CartItem)
-	return Cart{
-		CartID:     0,
-		CustomerId: int64(customerId),
-		CartItems:  cartItems,
-	}
-}
-
-func (ct CartTable) ParseCartTable() Cart {
-	cartItems := make(map[int64]CartItem)
-
-	return Cart{
-		CartID:     ct.CartID,
-		CustomerId: ct.CustomerId,
-		CartItems:  cartItems,
-	}
-}
-
-func (c *Cart) AddItemToCart(i Item) {
+func (c *Cart) AddItem(i Item) {
 	if _, ok := c.CartItems[i.Id]; ok {
 		item := c.CartItems[i.Id]
 		item.Quantity += 1
@@ -69,7 +35,7 @@ func (c Cart) GetCartTotal(cr CartRules) CartTotal {
 		}
 
 		if total > cr.DiscountThreshold {
-			discount += 1.00
+			discount += cr.Discount
 		}
 	} else {
 		for _, v := range c.CartItems {

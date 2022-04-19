@@ -8,18 +8,19 @@ import (
 type CartRules struct {
 	MaxBasketSize     int64 `json:"max_basket_size"`
 	DiscountThreshold int64 `json:"discount_threshold"`
+	Discount          int64 `json:"discount"`
 	FreeItemThreshold int64 `json:"free_item_threshold"`
 }
 
 func ReadCartRules(path string) CartRules {
 	file, err := ioutil.ReadFile(path)
 	if err != nil {
-		return CartRules{}
+		panic(err)
 	}
 	cr := CartRules{}
-	err = json.Unmarshal([]byte(file), &cr)
+	err = json.Unmarshal(file, &cr)
 	if err != nil {
-		return CartRules{}
+		panic(err)
 	}
 	return cr
 }

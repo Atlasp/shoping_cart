@@ -1,0 +1,38 @@
+basePath: /api/v1
+definitions:
+  model.Item:
+    properties:
+      category:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    type: object
+host: localhost:4141
+info:
+  contact:
+    email: simaspaulikas@yahoo.com
+    name: Simas Paulikas
+  description: Shopping API for Revel.
+  title: Revel Shopping API
+  version: "1.0"
+paths:
+  /items/{item_id}:
+    get:
+      description: get item by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Item'
+      summary: Show an item
+      tags:
+      - items
+swagger: "2.0"

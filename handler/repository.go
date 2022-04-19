@@ -1,13 +1,12 @@
-package repostitory
+package handler
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"revel_systems_shopping/src/model"
+	"revel_systems_shopping/model"
 )
 
 type Repository struct {
@@ -38,7 +37,7 @@ func NewRepository(connectionString string, cr string) Repository {
 	return Repository{DB: db, CartRules: cartRules}
 }
 
-func (r Repository) GetItem(id interface{}) (model.Item, error) {
+func (r Repository) GetItem(id int64) (model.Item, error) {
 	var item model.Item
 	result := r.DB.First(&item, id)
 	if result.Error != nil {
@@ -47,7 +46,7 @@ func (r Repository) GetItem(id interface{}) (model.Item, error) {
 	return item, nil
 }
 
-func (r Repository) DeleteItem(id interface{}) error {
+func (r Repository) DeleteItem(id int64) error {
 	result := r.DB.Delete(&model.Item{}, id)
 	if result.Error != nil {
 		return result.Error
@@ -63,7 +62,7 @@ func (r Repository) AddItem(item model.Item) error {
 	return nil
 }
 
-func (r Repository) PlaceOrder(customerId string, cr model.CartRules) error {
+func (r Repository) PlaceOrder(customerId int64, cr model.CartRules) error {
 	c, _ := r.GetCart(customerId)
 	cartTotal := c.GetCartTotal(cr)
 	orderedItems := make([]int64, len(c.CartItems))
@@ -95,27 +94,10 @@ func (r Repository) PlaceOrder(customerId string, cr model.CartRules) error {
 		return nil
 	}
 
-	return fmt.Errorf("cart exceeds maximum limit of %d", cr.MaxBasketSize)
+	return fmt.Errorf("cannot complete order, cart exceeds maximum limit of $%d", cr.MaxBasketSize)
 }
 
-func (r Repository) GetCart(customerId string) (model.Cart, error) {
-	var cartEntry model.CartTable
-	result := r.DB.First(&cartEntry, "customer_id = ?", customerId)
-	cid, _ := strconv.Atoi(customerId)
-	if result.Error != nil {
-		return model.NewCart(cid), result.Error
-	}
-	cart := cartEntry.ParseCartTable()
-
-	for _, v := range cartEntry.Items {
-		item, _ := r.GetItem(v)
-		cart.AddItemToCart(item)
-	}
-
-	return cart, nil
-}
-
-func (r Repository) AddItemToCart(customerId interface{}, itemId interface{}) error {
+func (r Repository) AddItemToCart(customerId int64, itemId int64) error {
 	var cartTable model.CartTable
 	result := r.DB.First(&cartTable, "customer_id = ?", customerId)
 	if result.Error != nil {
@@ -134,4 +116,19 @@ func (r Repository) AddItemToCart(customerId interface{}, itemId interface{}) er
 	}
 
 	return fmt.Errorf("%s out of stock", item.Name)
+}
+func (r Repository) GetCart(customerId int64) (model.Cart, error) {
+	var cartEntry model.CartTable
+	result := r.DB.First(&cartEntry, "customer_id = ?", customerId)
+	if result.Error != nil {
+		return model.Cart{}, result.Error
+	}
+	cart := cartEntry.ParseCartTable()
+
+	for _, v := range cartEntry.Items {
+		item, _ := r.GetItem(v)
+		cart.AddItem(item)
+	}
+
+	return cart, nil
 }
