@@ -1,5 +1,31 @@
 version: '3.8'
 services:
+  postgres:
+    image: postgres:14.0-alpine
+    container_name: service_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      DATABASE_HOST: ${DB_HOST}
+    ports:
+      - '5432:5432'
+    networks:
+      - revel_shop
+
+  postgres_test:
+    image: postgres:14.0-alpine
+    container_name: test_db
+    environment:
+      POSTGRES_USER: ${TEST_DB_USER}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+      POSTGRES_DB: ${TEST_DB_NAME}
+      DATABASE_HOST: ${TEST_DB_HOST}
+    ports:
+      - '5433:5432'
+    networks:
+      - revel_shop
+
   app:
     container_name: revel_app
     build: .
@@ -28,34 +54,8 @@ services:
 
     restart: on-failure
     depends_on:
-      - service_db
-      - test_db
-    networks:
-      - revel_shop
-
-  postgres:
-    image: postgres:14.0-alpine
-    container_name: service_db
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-      DATABASE_HOST: ${DB_HOST}
-    ports:
-      - '5432:5432'
-    networks:
-      - revel_shop
-
-  postgres_test:
-    image: postgres:14.0-alpine
-    container_name: test_db
-    environment:
-      POSTGRES_USER: ${TEST_DB_USER}
-      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
-      POSTGRES_DB: ${TEST_DB_NAME}
-      DATABASE_HOST: ${TEST_DB_HOST}
-    ports:
-      - '5433:5432'
+      - postgres
+      - postgres_test
     networks:
       - revel_shop
 

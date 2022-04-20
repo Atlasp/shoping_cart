@@ -17,7 +17,6 @@ func CreateTestingRepository() Repository {
 		Discount:          1,
 		FreeItemThreshold: 5,
 	}
-
 	dsn := "host=localhost user=revel password=revel dbname=revel_test port=5433 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
