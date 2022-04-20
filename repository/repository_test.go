@@ -17,7 +17,7 @@ func CreateTestingRepository() Repository {
 		Discount:          1,
 		FreeItemThreshold: 5,
 	}
-	dsn := "host=localhost user=revel password=revel dbname=revel port=5433 sslmode=disable"
+	dsn := "host=localhost user=revel password=revel dbname=revel_test port=5433 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -70,6 +70,8 @@ func PopulateTestTable(r Repository) {
 			Price:    3,
 		},
 	}
+
+	r.DB.AutoMigrate(&model.Item{}, &model.CartTable{}, &model.Order{})
 
 	r.DB.Create(&testCarts)
 	r.DB.Create(&testItems)
