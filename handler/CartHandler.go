@@ -9,8 +9,8 @@ import (
 )
 
 // ShowAccount godoc
-// @Summary      Removes item
-// @Description  Removes item from catalog
+// @Summary      Returns cart.
+// @Description  Returns cart items given customer ID.
 // @Tags         carts
 // @Produce json
 // @Param   item_id     path    string     true        "ID of the item to retrieve"
@@ -30,8 +30,8 @@ func (h *handler) ReturnCart(c *gin.Context) {
 }
 
 // ShowAccount godoc
-// @Summary      Removes item
-// @Description  Removes item from catalog
+// @Summary      Adds item to cart.
+// @Description  Adds item given an ID to a given customer cart.
 // @Tags         carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer to whose cart the item is added"
@@ -62,8 +62,8 @@ func (h *handler) ItemToCart(c *gin.Context) {
 }
 
 // ShowAccount godoc
-// @Summary      Removes item
-// @Description  Removes item from catalog
+// @Summary      Returns cart total.
+// @Description  Returns cart total for a given customer.
 // @Tags         carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer for whom to retrieve total"
@@ -83,8 +83,8 @@ func (h *handler) ReturnCartTotal(c *gin.Context) {
 }
 
 // ShowAccount godoc
-// @Summary      Removes item
-// @Description  Removes item from catalog
+// @Summary      Places an order.
+// @Description  Places an order for a given customers cart.
 // @Tags         carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer who is making the order"

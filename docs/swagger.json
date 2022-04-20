@@ -14,14 +14,14 @@
     "paths": {
         "/carts/{customer_id}": {
             "get": {
-                "description": "Removes item from catalog",
+                "description": "Returns cart items given customer ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "carts"
                 ],
-                "summary": "Removes item",
+                "summary": "Returns cart.",
                 "parameters": [
                     {
                         "type": "string",
@@ -52,14 +52,14 @@
         },
         "/carts/{customer_id}/items/{item_id}": {
             "post": {
-                "description": "Removes item from catalog",
+                "description": "Adds item given an ID to a given customer cart.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "carts"
                 ],
-                "summary": "Removes item",
+                "summary": "Adds item to cart.",
                 "parameters": [
                     {
                         "type": "string",
@@ -97,14 +97,14 @@
         },
         "/carts/{customer_id}/orders": {
             "post": {
-                "description": "Removes item from catalog",
+                "description": "Places an order for a given customers cart.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "carts"
                 ],
-                "summary": "Removes item",
+                "summary": "Places an order.",
                 "parameters": [
                     {
                         "type": "string",
@@ -135,14 +135,14 @@
         },
         "/carts/{customer_id}/totals": {
             "post": {
-                "description": "Removes item from catalog",
+                "description": "Returns cart total for a given customer.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "carts"
                 ],
-                "summary": "Removes item",
+                "summary": "Returns cart total.",
                 "parameters": [
                     {
                         "type": "string",

@@ -31,7 +31,7 @@ info:
 paths:
   /carts/{customer_id}:
     get:
-      description: Removes item from catalog
+      description: Returns cart items given customer ID.
       parameters:
       - description: ID of the item to retrieve
         in: path
@@ -51,12 +51,12 @@ paths:
           description: Item doesn't exist
           schema:
             type: string
-      summary: Removes item
+      summary: Returns cart.
       tags:
       - carts
   /carts/{customer_id}/items/{item_id}:
     post:
-      description: Removes item from catalog
+      description: Adds item given an ID to a given customer cart.
       parameters:
       - description: ID of the customer to whose cart the item is added
         in: path
@@ -81,12 +81,12 @@ paths:
           description: Item doesn't exist
           schema:
             type: string
-      summary: Removes item
+      summary: Adds item to cart.
       tags:
       - carts
   /carts/{customer_id}/orders:
     post:
-      description: Removes item from catalog
+      description: Places an order for a given customers cart.
       parameters:
       - description: ID of the customer who is making the order
         in: path
@@ -106,12 +106,12 @@ paths:
           description: Item doesn't exist
           schema:
             type: string
-      summary: Removes item
+      summary: Places an order.
       tags:
       - carts
   /carts/{customer_id}/totals:
     post:
-      description: Removes item from catalog
+      description: Returns cart total for a given customer.
       parameters:
       - description: ID of the customer for whom to retrieve total
         in: path
@@ -131,7 +131,7 @@ paths:
           description: Item doesn't exist
           schema:
             type: string
-      summary: Removes item
+      summary: Returns cart total.
       tags:
       - carts
   /items/{item_id}:
