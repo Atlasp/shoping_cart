@@ -15,7 +15,9 @@ import (
 // @Description  get item by ID
 // @Tags         items
 // @Produce      json
+// @Param   item_id     path    string     true        "ID of the item to retrieve"
 // @Success      200  {object}  model.Item
+// @Failure      400 {string} string "Item doesn't exist"
 // @Router       /items/{item_id} [get]
 func (h *handler) GetItem(c *gin.Context) {
 	id := c.Param("item_id")
@@ -40,6 +42,7 @@ func (h *handler) GetItem(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success      200  {object}  model.Item
+// @Failure      400 {string} string "Item already exist"
 // @Router       /items/{item_id} [post]
 func (h *handler) CreateItem(c *gin.Context) {
 	item := model.Item{}
@@ -68,8 +71,9 @@ func (h *handler) CreateItem(c *gin.Context) {
 // @Description  Removes item from catalog
 // @Tags         items
 // @Produce json
+// @Param   item_id     path    string     true        "ID of the item to delete"
 // @Success      200  {object}  model.Item
-// @Failure
+// @Failure      400 {string} string "Item doesn't exist"
 // @Router       /items/{item_id} [delete]
 func (h *handler) RemoveItem(c *gin.Context) {
 	id := c.Param("item_id")

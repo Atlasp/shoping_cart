@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -15,8 +16,8 @@ func CreateTestingRepository() Repository {
 		Discount:          1,
 		FreeItemThreshold: 5,
 	}
-	dbconn := "postgres://revel:postgres@localhost:5432/revel_test"
-	repository := NewRepository(dbconn, cr)
+	dbConn := os.Getenv("TEST_DB_CONN")
+	repository := NewRepository(dbConn, cr)
 
 	return repository
 }

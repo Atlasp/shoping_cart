@@ -1,31 +1,26 @@
-FROM golang:alpine
+FROM golang:alpine as builder
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64 \
-    max_basket_size=100 \
-    discount_threshold=20 \
-    discount=1 \
-    free_item_threshold=5
+RUN apk update && apk add --no-cache git
 
-WORKDIR /build
+WORKDIR /app
 
-RUN apk update
-RUN	apk add git
+COPY go.mod go.sum ./
 
-COPY go.mod .
-COPY go.sum .
 RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-WORKDIR /dist
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
 
-RUN cp /build/main .
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage. Observe we also copied the .env file
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
 
 EXPOSE 4141
 
-CMD ["/dist/main"]
+CMD ["./main"]

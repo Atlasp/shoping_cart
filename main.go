@@ -12,9 +12,7 @@ import (
 	"revel_systems_shopping/repository"
 )
 
-// TODO: Testing
 // TODO: Package API in docker container
-// TODO: Swagger documentation
 
 // @title        Revel Shopping API
 // @version      1.0
@@ -28,8 +26,7 @@ import (
 func main() {
 
 	cartRules := model.NewCartRules()
-	dbConnection := "postgres://revel:revel@localhost:5432/revel"
-	repo := repository.NewRepository(dbConnection, cartRules)
+	repo := repository.NewRepository(cartRules)
 
 	h := handler.NewHandler(repo)
 

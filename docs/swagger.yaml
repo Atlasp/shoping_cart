@@ -32,6 +32,12 @@ paths:
   /carts/{customer_id}:
     get:
       description: Removes item from catalog
+      parameters:
+      - description: ID of the item to retrieve
+        in: path
+        name: item_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -41,12 +47,27 @@ paths:
             additionalProperties:
               $ref: '#/definitions/model.CartItem'
             type: object
+        "400":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Removes item
       tags:
       - carts
   /carts/{customer_id}/items/{item_id}:
     post:
       description: Removes item from catalog
+      parameters:
+      - description: ID of the customer to whose cart the item is added
+        in: path
+        name: customer_id
+        required: true
+        type: string
+      - description: ID of an item that is being added
+        in: path
+        name: item_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -56,25 +77,49 @@ paths:
             additionalProperties:
               $ref: '#/definitions/model.CartItem'
             type: object
+        "400":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Removes item
       tags:
       - carts
   /carts/{customer_id}/orders:
     post:
       description: Removes item from catalog
+      parameters:
+      - description: ID of the customer who is making the order
+        in: path
+        name: customer_id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
-          description: OK
+          description: Order has been place
           schema:
             additionalProperties:
               $ref: '#/definitions/model.CartItem'
             type: object
+        "500":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Removes item
       tags:
       - carts
   /carts/{customer_id}/totals:
     post:
       description: Removes item from catalog
+      parameters:
+      - description: ID of the customer for whom to retrieve total
+        in: path
+        name: customer_id
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -82,12 +127,22 @@ paths:
             additionalProperties:
               $ref: '#/definitions/model.CartItem'
             type: object
+        "400":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Removes item
       tags:
       - carts
   /items/{item_id}:
     delete:
       description: Removes item from catalog
+      parameters:
+      - description: ID of the item to delete
+        in: path
+        name: item_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -95,11 +150,21 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Item'
+        "400":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Removes item
       tags:
       - items
     get:
       description: get item by ID
+      parameters:
+      - description: ID of the item to retrieve
+        in: path
+        name: item_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -107,6 +172,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Item'
+        "400":
+          description: Item doesn't exist
+          schema:
+            type: string
       summary: Show an item
       tags:
       - items
@@ -121,6 +190,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Item'
+        "400":
+          description: Item already exist
+          schema:
+            type: string
       summary: Create an item
       tags:
       - items

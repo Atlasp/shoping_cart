@@ -29,6 +29,15 @@ const docTemplate = `{
                     "carts"
                 ],
                 "summary": "Removes item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the item to retrieve",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -37,6 +46,12 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "$ref": "#/definitions/model.CartItem"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Item doesn't exist",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -52,6 +67,22 @@ const docTemplate = `{
                     "carts"
                 ],
                 "summary": "Removes item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the customer to whose cart the item is added",
+                        "name": "customer_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID of an item that is being added",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -60,6 +91,12 @@ const docTemplate = `{
                             "additionalProperties": {
                                 "$ref": "#/definitions/model.CartItem"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Item doesn't exist",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -68,10 +105,60 @@ const docTemplate = `{
         "/carts/{customer_id}/orders": {
             "post": {
                 "description": "Removes item from catalog",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "carts"
                 ],
                 "summary": "Removes item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the customer who is making the order",
+                        "name": "customer_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order has been place",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Item doesn't exist",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/carts/{customer_id}/totals": {
+            "post": {
+                "description": "Removes item from catalog",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "carts"
+                ],
+                "summary": "Removes item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the customer for whom to retrieve total",
+                        "name": "customer_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -81,25 +168,11 @@ const docTemplate = `{
                                 "$ref": "#/definitions/model.CartItem"
                             }
                         }
-                    }
-                }
-            }
-        },
-        "/carts/{customer_id}/totals": {
-            "post": {
-                "description": "Removes item from catalog",
-                "tags": [
-                    "carts"
-                ],
-                "summary": "Removes item",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                    },
+                    "400": {
+                        "description": "Item doesn't exist",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "$ref": "#/definitions/model.CartItem"
-                            }
+                            "type": "string"
                         }
                     }
                 }
@@ -115,11 +188,26 @@ const docTemplate = `{
                     "items"
                 ],
                 "summary": "Show an item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the item to retrieve",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Item"
+                        }
+                    },
+                    "400": {
+                        "description": "Item doesn't exist",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -142,6 +230,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/model.Item"
                         }
+                    },
+                    "400": {
+                        "description": "Item already exist",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -154,11 +248,26 @@ const docTemplate = `{
                     "items"
                 ],
                 "summary": "Removes item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the item to delete",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Item"
+                        }
+                    },
+                    "400": {
+                        "description": "Item doesn't exist",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }

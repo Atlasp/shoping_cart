@@ -13,7 +13,9 @@ import (
 // @Description  Removes item from catalog
 // @Tags         carts
 // @Produce json
+// @Param   item_id     path    string     true        "ID of the item to retrieve"
 // @Success      200  {object} map[int64]model.CartItem
+// @Failure      400 {string} string "Item doesn't exist"
 // @Router       /carts/{customer_id} [get]
 func (h *handler) ReturnCart(c *gin.Context) {
 	cartId := c.Param("customer_id")
@@ -32,7 +34,10 @@ func (h *handler) ReturnCart(c *gin.Context) {
 // @Description  Removes item from catalog
 // @Tags         carts
 // @Produce json
+// @Param   customer_id     path    string     true        "ID of the customer to whose cart the item is added"
+// @Param   item_id     path    string     true        "ID of an item that is being added"
 // @Success      200  {object}  map[int64]model.CartItem
+// @Failure      400 {string} string "Item doesn't exist"
 // @Router       /carts/{customer_id}/items/{item_id} [post]
 func (h *handler) ItemToCart(c *gin.Context) {
 	customerId := c.Param("customer_id")
@@ -60,7 +65,10 @@ func (h *handler) ItemToCart(c *gin.Context) {
 // @Summary      Removes item
 // @Description  Removes item from catalog
 // @Tags         carts
+// @Produce json
+// @Param   customer_id     path    string     true        "ID of the customer for whom to retrieve total"
 // @Success      200  {object} map[int64]model.CartItem
+// @Failure      400 {string} string "Item doesn't exist"
 // @Router       /carts/{customer_id}/totals [post]
 func (h *handler) ReturnCartTotal(c *gin.Context) {
 	customerId := c.Param("customer_id")
@@ -78,7 +86,10 @@ func (h *handler) ReturnCartTotal(c *gin.Context) {
 // @Summary      Removes item
 // @Description  Removes item from catalog
 // @Tags         carts
-// @Success      200  {object} map[int64]model.CartItem
+// @Produce json
+// @Param   customer_id     path    string     true        "ID of the customer who is making the order"
+// @Success      200  {object} map[int64]model.CartItem "Order has been place"
+// @Failure      500 {string} string "Item doesn't exist"
 // @Router       /carts/{customer_id}/orders [post]
 func (h *handler) PlaceOrder(c *gin.Context) {
 	customerId := c.Param("customer_id")

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -14,10 +15,13 @@ type Repository struct {
 	CartRules model.CartRules
 }
 
-func NewRepository(connectionString string, cr model.CartRules) Repository {
-	dbURL := connectionString
-
-	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
+func NewRepository(cr model.CartRules) Repository {
+	db_user := os.Getenv("DB_USER")
+	db_password := os.Getenv("DB_PASSWORD")
+	db_name := os.Getenv("DB_NAME")
+	db_port := os.Getenv("DB_PORT")
+	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", db_user, db_password, db_name, db_port)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("cannot connect to database")
 	}
