@@ -6,17 +6,17 @@ import (
 )
 
 type CartRules struct {
-	MaxBasketSize     int64 `env:"max_basket_size"`
-	DiscountThreshold int64 `env:"discount_threshold"`
-	Discount          int64 `env:"discount"`
-	FreeItemThreshold int64 `env:"free_item_threshold"`
+	MaxBasketSize     int64
+	DiscountThreshold int64
+	Discount          int64
+	FreeItemThreshold int64
 }
 
 func NewCartRules() CartRules {
-	mbs := os.Getenv("max_basket_size")
-	dt := os.Getenv("discount_threshold")
-	d := os.Getenv("discount")
-	fit := os.Getenv("free_item_threshold")
+	mbs := os.Getenv("MAX_BASKET_SIZE")
+	dt := os.Getenv("DISCOUNT_THRESHOLD")
+	d := os.Getenv("DISCOUNT")
+	fit := os.Getenv("FREE_ITEM_THRESHOLD")
 
 	mBS, _ := strconv.ParseInt(mbs, 10, 64)
 	dT, _ := strconv.ParseInt(dt, 10, 64)

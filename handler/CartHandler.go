@@ -11,7 +11,7 @@ import (
 // ShowAccount godoc
 // @Summary      Returns cart.
 // @Description  Returns cart items given customer ID.
-// @Tags         carts
+// @Tags         Carts
 // @Produce json
 // @Param   item_id     path    string     true        "ID of the item to retrieve"
 // @Success      200  {object} map[int64]model.CartItem
@@ -32,7 +32,7 @@ func (h *handler) ReturnCart(c *gin.Context) {
 // ShowAccount godoc
 // @Summary      Adds item to cart.
 // @Description  Adds item given an ID to a given customer cart.
-// @Tags         carts
+// @Tags         Carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer to whose cart the item is added"
 // @Param   item_id     path    string     true        "ID of an item that is being added"
@@ -64,7 +64,7 @@ func (h *handler) ItemToCart(c *gin.Context) {
 // ShowAccount godoc
 // @Summary      Returns cart total.
 // @Description  Returns cart total for a given customer.
-// @Tags         carts
+// @Tags         Carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer for whom to retrieve total"
 // @Success      200  {object} map[int64]model.CartItem
@@ -85,7 +85,7 @@ func (h *handler) ReturnCartTotal(c *gin.Context) {
 // ShowAccount godoc
 // @Summary      Places an order.
 // @Description  Places an order for a given customers cart.
-// @Tags         carts
+// @Tags         Carts
 // @Produce json
 // @Param   customer_id     path    string     true        "ID of the customer who is making the order"
 // @Success      200  {object} map[int64]model.CartItem "Order has been place"

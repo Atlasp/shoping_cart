@@ -25,6 +25,7 @@ func main() {
 
 	cartRules := model.NewCartRules()
 	repo := repository.NewRepository(cartRules)
+	repo.PopulateDB()
 
 	h := handler.NewHandler(repo)
 

@@ -13,7 +13,7 @@ import (
 // ShowAccount godoc
 // @Summary      Show an item
 // @Description  get item by ID
-// @Tags         items
+// @Tags         Items
 // @Produce      json
 // @Param   item_id     path    string     true        "ID of the item to retrieve"
 // @Success      200  {object}  model.Item
@@ -38,7 +38,7 @@ func (h *handler) GetItem(c *gin.Context) {
 // ShowAccount godoc
 // @Summary      Create an item
 // @Description  Create an item
-// @Tags         items
+// @Tags         Items
 // @Accept json
 // @Produce json
 // @Success      200  {object}  model.Item
@@ -69,7 +69,7 @@ func (h *handler) CreateItem(c *gin.Context) {
 // ShowAccount godoc
 // @Summary      Removes item
 // @Description  Removes item from catalog
-// @Tags         items
+// @Tags         Items
 // @Produce json
 // @Param   item_id     path    string     true        "ID of the item to delete"
 // @Success      200  {object}  model.Item
