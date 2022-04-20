@@ -27,8 +27,8 @@ import (
 // @BasePath  /api/v1
 func main() {
 
-	cartRules := model.ReadCartRules("cart_rules.json")
-	dbConnection := "postgres://revel:postgres@localhost:5432/revel"
+	cartRules := model.NewCartRules()
+	dbConnection := "postgres://revel:revel@localhost:5432/revel"
 	repo := repository.NewRepository(dbConnection, cartRules)
 
 	h := handler.NewHandler(repo)

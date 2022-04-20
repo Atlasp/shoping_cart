@@ -1,19 +1,38 @@
-version: "3.8"
-
+version: '3'
 services:
-  database:
-    container_name: postgres_prod
-    image: postgres:12.8
-    restart: always
+  app:
+    container_name: shopping_app
+    build: .
+    ports:
+      - 4141:4141
+    restart: on-failure
+    volumes:
+      - api:/usr/src/app/
+    depends_on:
+      - postgres
+    networks:
+      - revel
+
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     environment:
       - POSTGRES_USER=revel
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=revel
       - POSTGRES_DB=revel
-      - POSTGRES_DB=revel_test
     ports:
-      - 5431:5431
+      - '5432:5432'
     volumes:
-      - db:/var/lib/postgresql/data
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - revel
 
 volumes:
-  db:
+  api:
+  database_postgres:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  revel:
+    driver: bridge
