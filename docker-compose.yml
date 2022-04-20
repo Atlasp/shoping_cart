@@ -2,15 +2,16 @@ version: "3.8"
 
 services:
   database:
-    container_name: postgres
+    container_name: postgres_prod
     image: postgres:12.8
     restart: always
     environment:
       - POSTGRES_USER=revel
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=revel
+      - POSTGRES_DB=revel_test
     ports:
-      - 5432:5432
+      - 5431:5431
     volumes:
       - db:/var/lib/postgresql/data
 

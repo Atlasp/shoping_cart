@@ -3,6 +3,13 @@ module revel_systems_shopping
 go 1.18
 
 require (
+	github.com/google/go-cmp v0.5.5
+	github.com/lib/pq v1.10.5
+	gorm.io/driver/postgres v1.3.4
+	gorm.io/gorm v1.23.4
+)
+
+require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
@@ -31,7 +38,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/lib/pq v1.10.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -48,8 +54,7 @@ require (
 	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/driver/postgres v1.3.4 // indirect
-	gorm.io/gorm v1.23.4 // indirect
 )

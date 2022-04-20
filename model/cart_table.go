@@ -8,19 +8,13 @@ type CartTable struct {
 	Items      pq.Int64Array `json:"items" gorm:"type:integer[]"`
 }
 
-func NewCart(customerId int64) CartTable {
-	return CartTable{
-		CustomerId: customerId,
-		Items:      nil,
-	}
-}
-
 func (ct CartTable) ParseCartTable() Cart {
 	cartItems := make(map[int64]CartItem)
 
 	return Cart{
 		CartID:     ct.CartID,
 		CustomerId: ct.CustomerId,
-		CartItems:  cartItems,
+		ItemId:     ct.Items,
+		Items:      cartItems,
 	}
 }

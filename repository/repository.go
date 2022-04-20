@@ -1,4 +1,4 @@
-package handler
+package repository
 
 import (
 	"fmt"
@@ -14,11 +14,10 @@ type Repository struct {
 	CartRules model.CartRules
 }
 
-func NewRepository(connectionString string, cr string) Repository {
+func NewRepository(connectionString string, cr model.CartRules) Repository {
 	dbURL := connectionString
 
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
-
 	if err != nil {
 		panic("cannot connect to database")
 	}
@@ -32,9 +31,7 @@ func NewRepository(connectionString string, cr string) Repository {
 		panic("cannot migrate")
 	}
 
-	cartRules := model.ReadCartRules(cr)
-
-	return Repository{DB: db, CartRules: cartRules}
+	return Repository{DB: db, CartRules: cr}
 }
 
 func (r Repository) GetItem(id int64) (model.Item, error) {
@@ -62,39 +59,39 @@ func (r Repository) AddItem(item model.Item) error {
 	return nil
 }
 
-func (r Repository) PlaceOrder(customerId int64, cr model.CartRules) error {
-	c, _ := r.GetCart(customerId)
-	cartTotal := c.GetCartTotal(cr)
-	orderedItems := make([]int64, len(c.CartItems))
-	for k := range c.CartItems {
-		orderedItems = append(orderedItems, k)
+func (r Repository) PlaceOrder(customerId int64) error {
+	var ct model.CartTable
+	result := r.DB.First(&ct, "customer_id = ?", customerId)
+	if result.Error != nil {
+		return result.Error
 	}
+	c, err := r.GetCart(customerId)
+	if err != nil {
+		return err
+	}
+	c.GetCartTotal(r.CartRules)
 	dt := time.Now()
 
-	if cartTotal.FinalPrice < cr.MaxBasketSize {
+	if c.CartT.FinalPrice <= r.CartRules.MaxBasketSize {
 
 		order := model.Order{
 			CustomerId:    c.CustomerId,
-			OrderedItems:  orderedItems,
-			OrderTotal:    cartTotal.TotalPrice,
-			OrderDiscount: cartTotal.Discount,
-			OrderFinal:    cartTotal.FinalPrice,
+			OrderedItems:  ct.Items,
+			OrderTotal:    c.CartT.TotalPrice,
+			OrderDiscount: c.CartT.Discount,
+			OrderFinal:    c.CartT.FinalPrice,
 			OrderDate:     dt,
 		}
 
-		cart := model.CartTable{
-			CartID:     c.CartID,
-			CustomerId: c.CustomerId,
-			Items:      nil,
-		}
+		ct.Items = nil
 
 		r.DB.Create(&order)
-		r.DB.Save(&cart)
+		r.DB.Save(&ct)
 
 		return nil
 	}
 
-	return fmt.Errorf("cannot complete order, cart exceeds maximum limit of $%d", cr.MaxBasketSize)
+	return fmt.Errorf("cannot complete order, cart exceeds maximum limit of $%d", r.CartRules.MaxBasketSize)
 }
 
 func (r Repository) AddItemToCart(customerId int64, itemId int64) error {
