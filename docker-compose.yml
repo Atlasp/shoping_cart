@@ -13,7 +13,6 @@ services:
       - FREE_ITEM_THRESHOLD=5
 
       # Postgres connection
-      - DB_HOST=postgres
       - DB_DRIVER=postgres
       - DB_USER=revel
       - DB_PASSWORD=revel
@@ -21,7 +20,6 @@ services:
       - DB_PORT=5432
 
       # Postgres Test
-      - TEST_DB_HOST=postgres_test
       - TEST_DB_DRIVER=postgres
       - TEST_DB_USER=revel
       - TEST_DB_PASSWORD=revel
