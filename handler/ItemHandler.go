@@ -33,6 +33,14 @@ func (h *handler) GetItem(c *gin.Context) {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Create an item
+// @Description  Create an item
+// @Tags         items
+// @Accept json
+// @Produce json
+// @Success      200  {object}  model.Item
+// @Router       /items/{item_id} [post]
 func (h *handler) CreateItem(c *gin.Context) {
 	item := model.Item{}
 	err := c.Bind(&item)
@@ -55,6 +63,14 @@ func (h *handler) CreateItem(c *gin.Context) {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Removes item
+// @Description  Removes item from catalog
+// @Tags         items
+// @Produce json
+// @Success      200  {object}  model.Item
+// @Failure
+// @Router       /items/{item_id} [delete]
 func (h *handler) RemoveItem(c *gin.Context) {
 	id := c.Param("item_id")
 	iid, err := strconv.ParseInt(id, 10, 64)

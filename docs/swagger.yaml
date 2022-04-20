@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  model.CartItem:
+    properties:
+      quantity:
+        type: integer
+      unit_price:
+        type: integer
+    type: object
   model.Item:
     properties:
       category:
@@ -22,7 +29,75 @@ info:
   title: Revel Shopping API
   version: "1.0"
 paths:
+  /carts/{customer_id}:
+    get:
+      description: Removes item from catalog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.CartItem'
+            type: object
+      summary: Removes item
+      tags:
+      - carts
+  /carts/{customer_id}/items/{item_id}:
+    post:
+      description: Removes item from catalog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.CartItem'
+            type: object
+      summary: Removes item
+      tags:
+      - carts
+  /carts/{customer_id}/orders:
+    post:
+      description: Removes item from catalog
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.CartItem'
+            type: object
+      summary: Removes item
+      tags:
+      - carts
+  /carts/{customer_id}/totals:
+    post:
+      description: Removes item from catalog
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/model.CartItem'
+            type: object
+      summary: Removes item
+      tags:
+      - carts
   /items/{item_id}:
+    delete:
+      description: Removes item from catalog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Item'
+      summary: Removes item
+      tags:
+      - items
     get:
       description: get item by ID
       produces:
@@ -33,6 +108,20 @@ paths:
           schema:
             $ref: '#/definitions/model.Item'
       summary: Show an item
+      tags:
+      - items
+    post:
+      consumes:
+      - application/json
+      description: Create an item
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Item'
+      summary: Create an item
       tags:
       - items
 swagger: "2.0"

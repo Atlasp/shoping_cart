@@ -19,6 +19,92 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/carts/{customer_id}": {
+            "get": {
+                "description": "Removes item from catalog",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "carts"
+                ],
+                "summary": "Removes item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/carts/{customer_id}/items/{item_id}": {
+            "post": {
+                "description": "Removes item from catalog",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "carts"
+                ],
+                "summary": "Removes item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/carts/{customer_id}/orders": {
+            "post": {
+                "description": "Removes item from catalog",
+                "tags": [
+                    "carts"
+                ],
+                "summary": "Removes item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/carts/{customer_id}/totals": {
+            "post": {
+                "description": "Removes item from catalog",
+                "tags": [
+                    "carts"
+                ],
+                "summary": "Removes item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/items/{item_id}": {
             "get": {
                 "description": "get item by ID",
@@ -37,10 +123,60 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create an item",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "items"
+                ],
+                "summary": "Create an item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Item"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Removes item from catalog",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "items"
+                ],
+                "summary": "Removes item",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Item"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
+        "model.CartItem": {
+            "type": "object",
+            "properties": {
+                "quantity": {
+                    "type": "integer"
+                },
+                "unit_price": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Item": {
             "type": "object",
             "properties": {

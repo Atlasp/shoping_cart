@@ -8,6 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ShowAccount godoc
+// @Summary      Removes item
+// @Description  Removes item from catalog
+// @Tags         carts
+// @Produce json
+// @Success      200  {object} map[int64]model.CartItem
+// @Router       /carts/{customer_id} [get]
 func (h *handler) ReturnCart(c *gin.Context) {
 	cartId := c.Param("customer_id")
 	cid, err := strconv.ParseInt(cartId, 10, 64)
@@ -20,6 +27,13 @@ func (h *handler) ReturnCart(c *gin.Context) {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Removes item
+// @Description  Removes item from catalog
+// @Tags         carts
+// @Produce json
+// @Success      200  {object}  map[int64]model.CartItem
+// @Router       /carts/{customer_id}/items/{item_id} [post]
 func (h *handler) ItemToCart(c *gin.Context) {
 	customerId := c.Param("customer_id")
 	itemId := c.Param("item_id")
@@ -42,6 +56,12 @@ func (h *handler) ItemToCart(c *gin.Context) {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Removes item
+// @Description  Removes item from catalog
+// @Tags         carts
+// @Success      200  {object} map[int64]model.CartItem
+// @Router       /carts/{customer_id}/totals [post]
 func (h *handler) ReturnCartTotal(c *gin.Context) {
 	customerId := c.Param("customer_id")
 	cid, err := strconv.ParseInt(customerId, 10, 64)
@@ -54,6 +74,12 @@ func (h *handler) ReturnCartTotal(c *gin.Context) {
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Removes item
+// @Description  Removes item from catalog
+// @Tags         carts
+// @Success      200  {object} map[int64]model.CartItem
+// @Router       /carts/{customer_id}/orders [post]
 func (h *handler) PlaceOrder(c *gin.Context) {
 	customerId := c.Param("customer_id")
 	cid, err := strconv.ParseInt(customerId, 10, 64)
