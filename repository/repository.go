@@ -16,11 +16,12 @@ type Repository struct {
 }
 
 func NewRepository(cr model.CartRules) Repository {
-	db_user := os.Getenv("DB_USER")
-	db_password := os.Getenv("DB_PASSWORD")
-	db_name := os.Getenv("DB_NAME")
-	db_port := os.Getenv("DB_PORT")
-	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", db_user, db_password, db_name, db_port)
+	dbHost := os.Getenv("DB_HOST")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
+	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbPort, dbUser, dbName, dbPassword)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("cannot connect to database")

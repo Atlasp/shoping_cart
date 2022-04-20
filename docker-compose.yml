@@ -1,27 +1,48 @@
-version: '3'
+version: '3.8'
 services:
   app:
     container_name: revel_shop
     build: .
     ports:
       - '4141:4141'
+    environment:
+      # Cart Rules
+      - MAX_BASKET_SIZE=100
+      - DISCOUNT_THRESHOLD=20
+      - DISCOUNT=1
+      - FREE_ITEM_THRESHOLD=5
+
+      # Postgres connection
+      - DB_HOST=postgres
+      - DB_DRIVER=postgres
+      - DB_USER=revel
+      - DB_PASSWORD=revel
+      - DB_NAME=revel
+      - DB_PORT=5432
+
+      # Postgres Test
+      - TEST_DB_HOST=postgres_test
+      - TEST_DB_DRIVER=postgres
+      - TEST_DB_USER=revel
+      - TEST_DB_PASSWORD=revel
+      - TEST_DB_NAME=revel_test
+      - TEST_DB_PORT=5433
     restart: on-failure
     volumes:
       - api:/usr/src/app/
     depends_on:
-      - postgres
-      - postgres_test
+      - service_db
+      - test_db
     networks:
       - revel_shop
 
   postgres:
-    image: postgres:latest
+    image: postgres:14.0-alpine
     container_name: service_db
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
+      - POSTGRES_USER=revel
+      - POSTGRES_PASSWORD=revel
+      - POSTGRES_DB=revel
     ports:
       - '5432:5432'
     volumes:
@@ -30,13 +51,12 @@ services:
       - revel_shop
 
   postgres_test:
-    image: postgres:latest
+    image: postgres:14.0-alpine
     container_name: test_db
     environment:
-      - POSTGRES_USER=${TEST_DB_USER}
-      - POSTGRES_PASSWORD=${TEST_DB_PASSWORD}
-      - POSTGRES_DB=${TEST_DB_NAME}
-      - DATABASE_HOST=${TEST_DB_HOST}
+      - POSTGRES_USER=revel
+      - POSTGRES_PASSWORD=revel
+      - POSTGRES_DB=revel_test
     ports:
       - '5433:5432'
     volumes:
@@ -48,6 +68,6 @@ volumes:
   api:
   database_postgres:
 
-# Networks to be created to facilitate communication between containers
 networks:
   revel_shop:
+    driver: bridge

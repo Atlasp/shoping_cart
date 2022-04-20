@@ -96,7 +96,7 @@ func (h *handler) PlaceOrder(c *gin.Context) {
 	cid, err := strconv.ParseInt(customerId, 10, 64)
 	err = h.repo.PlaceOrder(cid)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, fmt.Sprintf("%s", err.Error()))
+		c.JSON(http.StatusBadRequest, fmt.Sprintf("%d: %s", http.StatusBadRequest, err.Error()))
 	} else {
 		c.JSON(http.StatusOK, fmt.Sprintf("Order has been placed"))
 	}

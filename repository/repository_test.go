@@ -1,11 +1,12 @@
 package repository
 
 import (
-	"os"
 	"reflect"
 	"testing"
 	"time"
 
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"revel_systems_shopping/model"
 )
 
@@ -16,10 +17,15 @@ func CreateTestingRepository() Repository {
 		Discount:          1,
 		FreeItemThreshold: 5,
 	}
-	dbConn := os.Getenv("TEST_DB_CONN")
-	repository := NewRepository(dbConn, cr)
-
-	return repository
+	dsn := "host=localhost user=revel password=revel dbname=revel port=5433 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+	return Repository{
+		DB:        db,
+		CartRules: cr,
+	}
 }
 
 func PopulateTestTable(r Repository) {

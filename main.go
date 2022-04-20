@@ -12,8 +12,6 @@ import (
 	"revel_systems_shopping/repository"
 )
 
-// TODO: Package API in docker container
-
 // @title        Revel Shopping API
 // @version      1.0
 // @description  Shopping API for Revel.
