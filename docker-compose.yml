@@ -6,25 +6,26 @@ services:
     ports:
       - '4141:4141'
     environment:
-      # Cart Rules
-      - MAX_BASKET_SIZE=100
-      - DISCOUNT_THRESHOLD=20
-      - DISCOUNT=1
-      - FREE_ITEM_THRESHOLD=5
+      MAX_BASKET_SIZE: ${MAX_BASKET_SIZE}
+      DISCOUNT_THRESHOLD: ${DISCOUNT_THRESHOLD}
+      DISCOUNT: ${DISCOUNT}
+      FREE_ITEM_THRESHOLD: ${FREE_ITEM_THRESHOLD}
 
-      # Postgres connection
-      - DB_DRIVER=postgres
-      - DB_USER=revel
-      - DB_PASSWORD=revel
-      - DB_NAME=revel
-      - DB_PORT=5432
+      DB_HOST: ${DB_HOST}
+      DB_DRIVER: ${DB_DRIVER}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
 
       # Postgres Test
-      - TEST_DB_DRIVER=postgres
-      - TEST_DB_USER=revel
-      - TEST_DB_PASSWORD=revel
-      - TEST_DB_NAME=revel_test
-      - TEST_DB_PORT=5433
+      TEST_DB_HOST: ${TEST_DB_HOST}
+      TEST_DB_DRIVER: ${TEST_DB_DRIVER}
+      TEST_DB_USER: ${TEST_DB_USER}
+      TEST_DB_PASSWORD: ${TEST_DB_PASSWORD}
+      TEST_DB_NAME: ${TEST_DB_NAME}
+      TEST_DB_PORT: ${TEST_DB_PORT}
+
     restart: on-failure
     depends_on:
       - service_db
@@ -36,9 +37,10 @@ services:
     image: postgres:14.0-alpine
     container_name: service_db
     environment:
-      - POSTGRES_USER=revel
-      - POSTGRES_PASSWORD=revel
-      - POSTGRES_DB=revel
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      DATABASE_HOST: ${DB_HOST}
     ports:
       - '5432:5432'
     networks:
@@ -48,9 +50,10 @@ services:
     image: postgres:14.0-alpine
     container_name: test_db
     environment:
-      - POSTGRES_USER=revel
-      - POSTGRES_PASSWORD=revel
-      - POSTGRES_DB=revel_test
+      POSTGRES_USER: ${TEST_DB_USER}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+      POSTGRES_DB: ${TEST_DB_NAME}
+      DATABASE_HOST: ${TEST_DB_HOST}
     ports:
       - '5433:5432'
     networks:
